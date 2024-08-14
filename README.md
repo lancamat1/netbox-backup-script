@@ -61,3 +61,30 @@ To automate the backup process, you can add a cron job. For example, to run the 
    ```
 
    Replace `your_postgres_password` with the actual PostgreSQL password and `/path/to/your/repository` with the path to the cloned repository.
+
+## Restore from Backup
+
+1. Stop the Netbox service:
+   ```sh
+   sudo systemctl stop netbox
+   ```
+
+2. Drop the existing Netbox database:
+   ```sh
+   sudo -u postgres psql -c "DROP DATABASE IF EXISTS netbox;"
+   ```
+
+3. Create a new Netbox database:
+   ```sh
+   sudo -u postgres psql -c "CREATE DATABASE netbox WITH OWNER netbox;"
+   ```
+
+4. Restore the database from the backup:
+   ```sh
+   gunzip -c /opt/backups/netbox/netbox_2024-08-14.psql.gz | sudo -u postgres psql netbox
+   ```
+
+5. Start the Netbox service:
+   ```sh
+   sudo systemctl start netbox
+   ```
